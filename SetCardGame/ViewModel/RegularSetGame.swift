@@ -30,6 +30,10 @@ class RegularSetGame: ObservableObject {
     
     @Published private var model: SetGame<CardContent>
     
+    var cardsOnBoard: [Card] {
+        model.cardsOnBoard
+    }
+    
     init() {
         self.model = RegularSetGame.createGame()
     }
@@ -77,6 +81,24 @@ class RegularSetGame: ObservableObject {
     // MARK: - Intents
     func choose(_ card: Card) {
         model.choose(card)
+    }
+    
+    func deal() {
+        model.deal()
+    }
+    
+    func areMatched(potentialMatch: [Card]) -> Bool {
+        if potentialMatch[0].content.color == potentialMatch[1].content.color && potentialMatch[1].content.color == potentialMatch[2].content.color {
+            return true
+        } else if potentialMatch[0].content.number == potentialMatch[1].content.number && potentialMatch[1].content.number == potentialMatch[2].content.number {
+            return true
+        } else if potentialMatch[0].content.shading == potentialMatch[1].content.shading && potentialMatch[1].content.shading == potentialMatch[2].content.shading {
+            return true
+        } else if potentialMatch[0].content.shape == potentialMatch[1].content.shape && potentialMatch[1].content.shape == potentialMatch[2].content.shape {
+            return true
+        } else {
+            return false
+        }
     }
 }
 

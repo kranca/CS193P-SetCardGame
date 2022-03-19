@@ -14,6 +14,8 @@ struct RegularSetGameView: View {
             Text("Test")
             
             gameBody
+            Spacer()
+            bottomBody
         }
     }
     
@@ -30,12 +32,20 @@ struct RegularSetGameView: View {
 //                    }
 //                }
 //            }
-            AspectRatioVGrid(items: game.cards, aspectRatio: 2/3, content: { card in
+            AspectRatioVGrid(items: game.cardsOnBoard, aspectRatio: 2/3, content: { card in
                 cardView(for: card)
                     .onTapGesture {
                         game.choose(card)
                     }
             })
+        }
+    }
+    
+    var bottomBody: some View {
+        HStack(alignment: .center) {
+            Button("Deal") {
+                game.deal()
+            }
         }
     }
     
