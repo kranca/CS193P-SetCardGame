@@ -56,8 +56,8 @@ class RegularSetGame: ObservableObject {
         case open
     }
     
-    var cards: Array<Card> {
-        model.cards
+    var deck: Array<Card> {
+        model.deck
     }
     
     struct CardContent: Equatable, Hashable {
@@ -81,23 +81,28 @@ class RegularSetGame: ObservableObject {
     // MARK: - Intents
     func choose(_ card: Card) {
         model.choose(card)
+        if model.potentialSet.count > 2 {
+            areMatched()
+        }
     }
     
     func deal() {
         model.deal()
     }
     
-    func areMatched(potentialMatch: [Card]) -> Bool {
-        if potentialMatch[0].content.color == potentialMatch[1].content.color && potentialMatch[1].content.color == potentialMatch[2].content.color {
-            return true
-        } else if potentialMatch[0].content.number == potentialMatch[1].content.number && potentialMatch[1].content.number == potentialMatch[2].content.number {
-            return true
-        } else if potentialMatch[0].content.shading == potentialMatch[1].content.shading && potentialMatch[1].content.shading == potentialMatch[2].content.shading {
-            return true
-        } else if potentialMatch[0].content.shape == potentialMatch[1].content.shape && potentialMatch[1].content.shape == potentialMatch[2].content.shape {
-            return true
-        } else {
-            return false
+    func areMatched() {
+        model.areMatched {
+            if model.potentialSet[0].content.color == model.potentialSet[1].content.color && model.potentialSet[1].content.color == model.potentialSet[2].content.color {
+                return true
+            } else if model.potentialSet[0].content.number == model.potentialSet[1].content.number && model.potentialSet[1].content.number == model.potentialSet[2].content.number {
+                return true
+            } else if model.potentialSet[0].content.shading == model.potentialSet[1].content.shading && model.potentialSet[1].content.shading == model.potentialSet[2].content.shading {
+                return true
+            } else if model.potentialSet[0].content.shape == model.potentialSet[1].content.shape && model.potentialSet[1].content.shape == model.potentialSet[2].content.shape {
+                return true
+            } else {
+                return false
+            }
         }
     }
 }

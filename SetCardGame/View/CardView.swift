@@ -74,6 +74,6 @@ struct CardView_Previews: PreviewProvider {
     
     static var previews: some View {
         let game = RegularSetGame()
-        CardView(card: game.cards[1])
+        CardView(card: game.deck[1])
     }
 }

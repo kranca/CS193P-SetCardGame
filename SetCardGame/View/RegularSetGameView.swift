@@ -9,9 +9,10 @@ import SwiftUI
 
 struct RegularSetGameView: View {
     @ObservedObject var game = RegularSetGame()
+    
     var body: some View {
         VStack {
-            Text("Test")
+            Text("\(game.deck.count) cards left on deck")
             
             gameBody
             Spacer()
@@ -21,17 +22,6 @@ struct RegularSetGameView: View {
     
     var gameBody: some View {
         VStack {
-//            let grid = [GridItem(), GridItem()]
-//            ScrollView {
-//                LazyVGrid(columns: grid) {
-//                    ForEach(game.cards, id: \.self.id) { card in
-//                        VStack {
-//                            CardView(card: card)
-//                                .aspectRatio(2/3, contentMode: .fill)
-//                        }
-//                    }
-//                }
-//            }
             AspectRatioVGrid(items: game.cardsOnBoard, aspectRatio: 2/3, content: { card in
                 cardView(for: card)
                     .onTapGesture {
@@ -43,8 +33,11 @@ struct RegularSetGameView: View {
     
     var bottomBody: some View {
         HStack(alignment: .center) {
-            Button("Deal") {
-                game.deal()
+            
+            if !game.deck.isEmpty {
+                Button("Deal 3 more cards") {
+                    game.deal()
+                }
             }
         }
     }

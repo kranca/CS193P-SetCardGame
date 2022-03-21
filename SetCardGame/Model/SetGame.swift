@@ -19,6 +19,7 @@ struct SetGame<CardContent> where CardContent: Hashable {
         for card in content {
             cards.append(Card(content: card))
         }
+        deal()
     }
     
     mutating func choose(_ card: Card) {
@@ -35,17 +36,31 @@ struct SetGame<CardContent> where CardContent: Hashable {
                 }
             }
         } else {
+            for index in cardsOnBoard.indices {
+                cardsOnBoard[index].isSelected = false
+            }
+            potentialSet.removeAll()
             
+            if let chosenIndex = cardsOnBoard.firstIndex(where: { $0.id == card.id }) {
+                cardsOnBoard[chosenIndex].isSelected.toggle()
+                potentialSet.append(cardsOnBoard[chosenIndex])
+            }
         }
     }
     
-    mutating func areMatched(potentialMatch: [Card], checkForMatch: (_ potentialMatch: [Card]) -> Bool) {
-        if checkForMatch(potentialMatch) {
-            for card in potentialMatch {
+    mutating func areMatched(checkForMatch: () -> Bool) {
+        if checkForMatch() {
+            for card in potentialSet {
                 if let index = cardsOnBoard.firstIndex(where: { $0.id == card.id }) {
-                    cardsOnBoard[index].isMatched = true
+                    cardsOnBoard.remove(at: index)
+                }
+                if let index = potentialSet.firstIndex(where: { $0.id == card.id }) {
+                    potentialSet.remove(at: index)
                 }
             }
+        }
+        if cardsOnBoard.isEmpty {
+            deal()
         }
     }
     
@@ -53,7 +68,6 @@ struct SetGame<CardContent> where CardContent: Hashable {
         let id = UUID()
         let content: CardContent
         var isSelected = false
-        var isMatched = false
     }
     
     mutating func deal() {
