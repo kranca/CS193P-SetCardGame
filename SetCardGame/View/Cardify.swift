@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct Cardify: ViewModifier {
+    let color: Color
     
     func body(content: Content) -> some View {
         ZStack {
@@ -17,7 +18,7 @@ struct Cardify: ViewModifier {
                 .foregroundColor(.white)
             cardShape
                 .strokeBorder(lineWidth: DrawingConstants.lineWidth)
-                .foregroundColor(.black)
+                .foregroundColor(color)
             content
         }
     }
@@ -29,7 +30,7 @@ struct Cardify: ViewModifier {
 }
 
 extension View {
-    func cardify() -> some View {
-        self.modifier(Cardify())
+    func cardify(_ color: Color) -> some View {
+        self.modifier(Cardify(color: color))
     }
 }

@@ -18,7 +18,6 @@
 		C44899A727E38E96005B5229 /* Diamond.swift in Sources */ = {isa = PBXBuildFile; fileRef = C44899A627E38E96005B5229 /* Diamond.swift */; };
 		C44899AA27E39869005B5229 /* Cardify.swift in Sources */ = {isa = PBXBuildFile; fileRef = C44899A927E39869005B5229 /* Cardify.swift */; };
 		C44899AD27E3C0C0005B5229 /* Square.swift in Sources */ = {isa = PBXBuildFile; fileRef = C44899AC27E3C0C0005B5229 /* Square.swift */; };
-		C44899B027E467EC005B5229 /* Selectify.swift in Sources */ = {isa = PBXBuildFile; fileRef = C44899AF27E467EC005B5229 /* Selectify.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,7 +34,6 @@
 		C44899A627E38E96005B5229 /* Diamond.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Diamond.swift; sourceTree = "<group>"; };
 		C44899A927E39869005B5229 /* Cardify.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cardify.swift; sourceTree = "<group>"; };
 		C44899AC27E3C0C0005B5229 /* Square.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Square.swift; sourceTree = "<group>"; };
-		C44899AF27E467EC005B5229 /* Selectify.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Selectify.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,7 +91,6 @@
 				C448998327E08C13005B5229 /* RegularSetGameView.swift */,
 				C44899A627E38E96005B5229 /* Diamond.swift */,
 				C44899A927E39869005B5229 /* Cardify.swift */,
-				C44899AF27E467EC005B5229 /* Selectify.swift */,
 				C44899A327E36436005B5229 /* CardView.swift */,
 				C44899AC27E3C0C0005B5229 /* Square.swift */,
 				C448999927E0DDA0005B5229 /* AspectRatioVGrid.swift */,
@@ -192,7 +189,6 @@
 				C448999527E08D4B005B5229 /* SetGame.swift in Sources */,
 				C44899A727E38E96005B5229 /* Diamond.swift in Sources */,
 				C448998227E08C13005B5229 /* SetCardGameApp.swift in Sources */,
-				C44899B027E467EC005B5229 /* Selectify.swift in Sources */,
 				C44899AD27E3C0C0005B5229 /* Square.swift in Sources */,
 				C44899A427E36436005B5229 /* CardView.swift in Sources */,
 				C44899A127E0EEB7005B5229 /* RegularSetGame.swift in Sources */,

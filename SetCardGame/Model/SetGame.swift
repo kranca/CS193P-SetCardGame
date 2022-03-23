@@ -58,6 +58,7 @@ struct SetGame<CardContent> where CardContent: Hashable {
                     potentialSet.remove(at: index)
                 }
             }
+            deal()
         }
         if cardsOnBoard.isEmpty {
             deal()

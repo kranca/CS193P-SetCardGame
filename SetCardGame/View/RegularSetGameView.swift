@@ -45,9 +45,9 @@ struct RegularSetGameView: View {
     @ViewBuilder
     func cardView(for card: SetGame<RegularSetGame.CardContent>.Card) -> some View {
         if card.isSelected {
-            CardView(card: card).selectify()
+            CardView(card: card).cardify(.blue)
         } else {
-            CardView(card: card).cardify()
+            CardView(card: card).cardify(.black)
         }
     }
 }
