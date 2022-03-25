@@ -86,6 +86,10 @@ class RegularSetGame: ObservableObject {
         }
     }
     
+    func startNewGame() {
+        model = RegularSetGame.createGame()
+    }
+    
     func deal() {
         model.deal()
     }

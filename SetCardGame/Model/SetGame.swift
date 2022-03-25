@@ -36,8 +36,23 @@ struct SetGame<CardContent> where CardContent: Hashable {
                 }
             }
         } else {
+            for card in potentialSet {
+                if let match = card.isMatched {
+                    if match {
+                        if let index = cardsOnBoard.firstIndex(where: { $0.id == card.id }) {
+                            cardsOnBoard.remove(at: index)
+                            if deck.count > 0 {
+                                cardsOnBoard.insert(deck.first!, at: index)
+                                deck.removeFirst()
+                            }
+                        }
+                    }
+                }
+            }
+            
             for index in cardsOnBoard.indices {
                 cardsOnBoard[index].isSelected = false
+                cardsOnBoard[index].isMatched = nil
             }
             potentialSet.removeAll()
             
@@ -52,16 +67,19 @@ struct SetGame<CardContent> where CardContent: Hashable {
         if checkForMatch() {
             for card in potentialSet {
                 if let index = cardsOnBoard.firstIndex(where: { $0.id == card.id }) {
-                    cardsOnBoard.remove(at: index)
-                }
-                if let index = potentialSet.firstIndex(where: { $0.id == card.id }) {
-                    potentialSet.remove(at: index)
+                    cardsOnBoard[index].isMatched = true
                 }
             }
-            deal()
-        }
-        if cardsOnBoard.isEmpty {
-            deal()
+            for index in potentialSet.indices {
+                potentialSet[index].isMatched = true
+            }
+            
+        } else {
+            for card in potentialSet {
+                if let index = cardsOnBoard.firstIndex(where: { $0.id == card.id }) {
+                    cardsOnBoard[index].isMatched = false
+                }
+            }
         }
     }
     
@@ -69,6 +87,7 @@ struct SetGame<CardContent> where CardContent: Hashable {
         let id = UUID()
         let content: CardContent
         var isSelected = false
+        var isMatched: Bool?
     }
     
     mutating func deal() {

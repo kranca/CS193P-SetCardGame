@@ -12,11 +12,9 @@ struct RegularSetGameView: View {
     
     var body: some View {
         VStack {
-            Text("\(game.deck.count) cards left on deck")
-            
             gameBody
             Spacer()
-            bottomBody
+            bottomBody.padding(.horizontal)
         }
     }
     
@@ -33,7 +31,10 @@ struct RegularSetGameView: View {
     
     var bottomBody: some View {
         HStack(alignment: .center) {
-            
+            Button("New Game") {
+                game.startNewGame()
+            }
+            Spacer()
             if !game.deck.isEmpty {
                 Button("Deal 3 more cards") {
                     game.deal()
@@ -44,11 +45,20 @@ struct RegularSetGameView: View {
     
     @ViewBuilder
     func cardView(for card: SetGame<RegularSetGame.CardContent>.Card) -> some View {
-        if card.isSelected {
-            CardView(card: card).cardify(.blue)
-        } else {
-            CardView(card: card).cardify(.black)
+        Group {
+            if let match = card.isMatched {
+               if match {
+                   CardView(card: card).cardify(.green)
+               } else {
+                   CardView(card: card).cardify(.red)
+               }
+           } else if card.isSelected {
+               CardView(card: card).cardify(.blue)
+           } else {
+               CardView(card: card).cardify(.black)
+           }
         }
+        .padding(1)
     }
 }
 
