@@ -36,19 +36,7 @@ struct SetGame<CardContent> where CardContent: Hashable {
                 }
             }
         } else {
-            for card in potentialSet {
-                if let match = card.isMatched {
-                    if match {
-                        if let index = cardsOnBoard.firstIndex(where: { $0.id == card.id }) {
-                            cardsOnBoard.remove(at: index)
-                            if deck.count > 0 {
-                                cardsOnBoard.insert(deck.first!, at: index)
-                                deck.removeFirst()
-                            }
-                        }
-                    }
-                }
-            }
+            replaceCards()
             
             for index in cardsOnBoard.indices {
                 cardsOnBoard[index].isSelected = false
@@ -91,6 +79,7 @@ struct SetGame<CardContent> where CardContent: Hashable {
     }
     
     mutating func deal() {
+        // case first 12 cards are dealt
         if deck.isEmpty && cardsOnBoard.isEmpty {
             for index in 0...11 {
                 cardsOnBoard.append(cards[index])
@@ -98,13 +87,33 @@ struct SetGame<CardContent> where CardContent: Hashable {
             for index in 12...cards.count-1 {
                 deck.append(cards[index])
             }
-        } else if !deck.isEmpty {
-            for index in 0...(min(2, deck.count-1)) {
-                cardsOnBoard.append(deck[index])
+        // case 3 cards are matched and highlighted green + deal 3 cards button is pressed
+        } else if cardsOnBoard.contains(where: { $0.isMatched == true }) {
+            replaceCards()
+        // case deal 3 cards button is pressed without matching cards
+        } else {
+            if deck.count > 3 {
+                for _ in 0...2 {
+                    cardsOnBoard.append(deck.first!)
+                    deck.removeFirst()
+                }
             }
-            deck.remove(at: 0)
-            deck.remove(at: 0)
-            deck.remove(at: 0)
+        }
+    }
+    
+    mutating func replaceCards() {
+        for card in potentialSet {
+            if let match = card.isMatched {
+                if match {
+                    if let index = cardsOnBoard.firstIndex(where: { $0.id == card.id }) {
+                        cardsOnBoard.remove(at: index)
+                        if deck.count > 0 {
+                            cardsOnBoard.insert(deck.first!, at: index)
+                            deck.removeFirst()
+                        }
+                    }
+                }
+            }
         }
     }
 }
