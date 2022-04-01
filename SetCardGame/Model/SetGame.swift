@@ -12,6 +12,7 @@ struct SetGame<CardContent> where CardContent: Hashable {
     private(set) var cardsOnBoard = [Card]()
     private(set) var deck = [Card]()
     private(set) var potentialSet = [Card]()
+    private(set) var discardedCards = [Card]()
     
     init(createCardContent: () -> Set<CardContent>) {
         cards = Array<Card>()
@@ -36,7 +37,8 @@ struct SetGame<CardContent> where CardContent: Hashable {
                 }
             }
         } else {
-            replaceCards()
+            //replaceCards()
+            discardCards()
             
             for index in cardsOnBoard.indices {
                 cardsOnBoard[index].isSelected = false
@@ -92,7 +94,7 @@ struct SetGame<CardContent> where CardContent: Hashable {
             replaceCards()
         // case deal 3 cards button is pressed without matching cards
         } else {
-            if deck.count > 3 {
+            if deck.count > 2 {
                 for _ in 0...2 {
                     cardsOnBoard.append(deck.first!)
                     deck.removeFirst()
@@ -106,11 +108,25 @@ struct SetGame<CardContent> where CardContent: Hashable {
             if let match = card.isMatched {
                 if match {
                     if let index = cardsOnBoard.firstIndex(where: { $0.id == card.id }) {
+                        discardedCards.append(cardsOnBoard[index])
                         cardsOnBoard.remove(at: index)
                         if deck.count > 0 {
                             cardsOnBoard.insert(deck.first!, at: index)
                             deck.removeFirst()
                         }
+                    }
+                }
+            }
+        }
+    }
+    
+    mutating func discardCards() {
+        for card in potentialSet {
+            if let match = card.isMatched {
+                if match {
+                    if let index = cardsOnBoard.firstIndex(where: { $0.id == card.id }) {
+                        discardedCards.append(cardsOnBoard[index])
+                        cardsOnBoard.remove(at: index)
                     }
                 }
             }

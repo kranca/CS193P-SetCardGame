@@ -9,12 +9,23 @@ import SwiftUI
 
 struct RegularSetGameView: View {
     @ObservedObject var game = RegularSetGame()
+    @Namespace private var dealingNamespace
+    
+    @State private var deckDealt = Set<UUID>()
     
     var body: some View {
-        VStack {
-            gameBody
-            Spacer()
-            bottomBody.padding(.horizontal)
+        ZStack(alignment: .bottom) {
+            VStack {
+                gameBody
+                Spacer()
+                bottomBody.padding(.horizontal)
+            }
+            HStack {
+                deckBody
+                Spacer()
+                discardedDeckBody
+            }
+            .padding(.horizontal)
         }
     }
     
@@ -23,7 +34,9 @@ struct RegularSetGameView: View {
             AspectRatioVGrid(items: game.cardsOnBoard, aspectRatio: 2/3, content: { card in
                 cardView(for: card)
                     .onTapGesture {
-                        game.choose(card)
+                        withAnimation(.easeInOut) {
+                            game.choose(card)
+                        }
                     }
             })
         }
@@ -31,16 +44,48 @@ struct RegularSetGameView: View {
     
     var bottomBody: some View {
         HStack(alignment: .center) {
+            Spacer()
             Button("New Game") {
                 game.startNewGame()
             }
             Spacer()
-            if !game.deck.isEmpty {
-                Button("Deal 3 more cards") {
-                    game.deal()
-                }
+        }
+    }
+    
+    var deckBody: some View {
+        ZStack {
+            ForEach(game.deck) { card in
+                CardView(card: card)
+                    .aspectRatio(2/3, contentMode: .fit)
+                    .cardify(.black, contentOn: false)
+                    .zIndex(zIndex(of: card))
+                    .matchedGeometryEffect(id: card.id, in: dealingNamespace)
+                    .transition(AnyTransition.asymmetric(insertion: .opacity, removal: .identity))
             }
         }
+        .frame(width: 60, height: 90)
+        .onTapGesture {
+            game.deal()
+        }
+    }
+    
+    var discardedDeckBody: some View {
+        ZStack {
+            ForEach(game.discardedCards) { card in
+                CardView(card: card)
+                    .aspectRatio(2/3, contentMode: .fit)
+                    .cardify(.black, contentOn: true)
+                    .zIndex(zIndex(of: card))
+                    .matchedGeometryEffect(id: card.id, in: dealingNamespace)
+                    .transition(AnyTransition.asymmetric(insertion: .opacity, removal: .identity))
+            }
+        }
+        .frame(width: 60, height: 90)
+        
+    }
+    
+    private func zIndex(of card: SetGame<RegularSetGame.CardContent>.Card) -> Double {
+        -Double(game.deck.firstIndex(where: { $0.id == card.id }) ?? 0)
     }
     
     @ViewBuilder

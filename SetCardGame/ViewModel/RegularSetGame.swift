@@ -60,6 +60,10 @@ class RegularSetGame: ObservableObject {
         model.deck
     }
     
+    var discardedCards: Array<Card> {
+        model.discardedCards
+    }
+    
     struct CardContent: Equatable, Hashable {
         var number: Int
         var shape: ShapeType

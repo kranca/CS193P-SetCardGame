@@ -9,17 +9,24 @@ import SwiftUI
 
 struct Cardify: ViewModifier {
     let color: Color
+    var contentOn = true
     
     func body(content: Content) -> some View {
         ZStack {
             let cardShape = RoundedRectangle(cornerRadius: DrawingConstants.cornerRadius)
-            cardShape
-                .fill()
-                .foregroundColor(.white)
-            cardShape
-                .strokeBorder(lineWidth: DrawingConstants.lineWidth)
-                .foregroundColor(color)
-            content
+            if contentOn {
+                cardShape
+                    .fill()
+                    .foregroundColor(.white)
+                cardShape
+                    .strokeBorder(lineWidth: DrawingConstants.lineWidth)
+                    .foregroundColor(color)
+                content
+            } else {
+                cardShape
+                    .fill()
+                    .foregroundColor(.black)
+            }
         }
     }
     
@@ -30,7 +37,7 @@ struct Cardify: ViewModifier {
 }
 
 extension View {
-    func cardify(_ color: Color) -> some View {
-        self.modifier(Cardify(color: color))
+    func cardify(_ color: Color, contentOn: Bool = true) -> some View {
+        self.modifier(Cardify(color: color, contentOn: contentOn))
     }
 }
