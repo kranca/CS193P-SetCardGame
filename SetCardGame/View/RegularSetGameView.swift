@@ -13,22 +13,12 @@ struct RegularSetGameView: View {
     @ObservedObject var game = RegularSetGame()
     @Namespace private var dealingNamespace
     
-    @State private var deckDealt = Set<UUID>()
-    
-    private func deal(_ card: Card) {
-        deckDealt.insert(card.id)
-    }
-    
-//    private func isUndealt(_ card: Card) -> Bool {
-//        !deckDealt.contains(card.id)
-//    }
-    
-    private func dealAnimation(for card: Card) -> Animation {
+    private func dealAnimation(for index: Int) -> Animation {
         var delay = 0.0
-        if let index = game.cardsOnBoard.firstIndex(where: { $0.id == card.id }) {
-            delay = Double(index) * (3 / Double(game.cardsOnBoard.count))
-        }
-        return Animation.easeInOut(duration: 1).delay(delay)
+        
+        delay = Double(index) * (GameConstants.totalDealDuration / Double(game.cardsOnBoard.count))
+        
+        return Animation.easeInOut(duration: GameConstants.dealDuration).delay(delay)
     }
     
     var body: some View {
@@ -49,7 +39,7 @@ struct RegularSetGameView: View {
     
     var gameBody: some View {
         VStack {
-            AspectRatioVGrid(items: game.cardsOnBoard, aspectRatio: 2/3, content: { card in
+            AspectRatioVGrid(items: game.cardsOnBoard, aspectRatio: GameConstants.aspectRatio, content: { card in
                 cardView(for: card)
                     .matchedGeometryEffect(id: card.id, in: dealingNamespace)
                     .onTapGesture {
@@ -75,19 +65,18 @@ struct RegularSetGameView: View {
         ZStack {
             ForEach(game.deck) { card in
                 CardView(card: card)
-                    .aspectRatio(2/3, contentMode: .fit)
+                    .aspectRatio(GameConstants.aspectRatio, contentMode: .fill)
                     .cardify(.black, contentOn: false)
                     .zIndex(zIndex(of: card))
                     .matchedGeometryEffect(id: card.id, in: dealingNamespace)
                     .transition(AnyTransition.asymmetric(insertion: .opacity, removal: .identity))
             }
         }
-        .frame(width: 60, height: 90)
+        .frame(width: GameConstants.deckWidth, height: GameConstants.deckHeight)
         .onTapGesture {
-            game.deal()
-            for card in game.cardsOnBoard {
-                withAnimation(dealAnimation(for: card)) {
-                    deal(card)
+            for index in 1...3 {
+                withAnimation(dealAnimation(for: index)) {
+                    game.deal()
                 }
             }
         }
@@ -101,10 +90,10 @@ struct RegularSetGameView: View {
                     .cardify(.black, contentOn: true)
                     .zIndex(zIndex(of: card))
                     .matchedGeometryEffect(id: card.id, in: dealingNamespace)
-                    .transition(AnyTransition.asymmetric(insertion: .opacity, removal: .identity))
+                    .transition(.identity)
             }
         }
-        .frame(width: 60, height: 90)
+        .frame(width: GameConstants.deckWidth, height: GameConstants.deckHeight)
         
     }
     
@@ -127,7 +116,16 @@ struct RegularSetGameView: View {
                CardView(card: card).cardify(.black)
            }
         }
-        .padding(1)
+        .padding(GameConstants.cardPadding)
+    }
+    
+    private struct GameConstants {
+        static let totalDealDuration: Double = 3
+        static let dealDuration: Double = 1
+        static let aspectRatio: CGFloat = 2/3
+        static let deckHeight: CGFloat = 90
+        static let deckWidth = deckHeight * aspectRatio
+        static let cardPadding: CGFloat = 1
     }
 }
 

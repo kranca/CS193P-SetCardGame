@@ -89,35 +89,29 @@ struct SetGame<CardContent> where CardContent: Hashable {
             for index in 12...cards.count-1 {
                 deck.append(cards[index])
             }
-        // case 3 cards are matched and highlighted green + deal 3 cards button is pressed
+        // case 3 cards are matched and highlighted green + closed deck is tapped
         } else if cardsOnBoard.contains(where: { $0.isMatched == true }) {
             replaceCards()
-        // case deal 3 cards button is pressed without matching cards
+        // case closed deck is tapped without matching cards
         } else {
             if deck.count > 2 {
-                for _ in 0...2 {
                     cardsOnBoard.append(deck.first!)
                     deck.removeFirst()
-                }
             }
         }
     }
     
     mutating func replaceCards() {
-        for card in potentialSet {
-            if let match = card.isMatched {
-                if match {
-                    if let index = cardsOnBoard.firstIndex(where: { $0.id == card.id }) {
-                        discardedCards.append(cardsOnBoard[index])
-                        cardsOnBoard.remove(at: index)
-                        if deck.count > 0 {
-                            cardsOnBoard.insert(deck.first!, at: index)
-                            deck.removeFirst()
-                        }
+        if potentialSet.contains(where: { $0.isMatched == true }) {
+                if let index = cardsOnBoard.firstIndex(where: { $0.isMatched == true }) {
+                    discardedCards.append(cardsOnBoard[index])
+                    cardsOnBoard.remove(at: index)
+                    if deck.count > 0 {
+                        cardsOnBoard.insert(deck.first!, at: index)
+                        deck.removeFirst()
                     }
                 }
             }
-        }
     }
     
     mutating func discardCards() {
