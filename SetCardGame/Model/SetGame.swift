@@ -94,7 +94,7 @@ struct SetGame<CardContent> where CardContent: Hashable {
             replaceCards()
         // case closed deck is tapped without matching cards
         } else {
-            if deck.count > 2 {
+            if deck.count > 0 {
                     cardsOnBoard.append(deck.first!)
                     deck.removeFirst()
             }

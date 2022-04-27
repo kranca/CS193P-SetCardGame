@@ -12,6 +12,7 @@ struct RegularSetGameView: View {
     
     @ObservedObject var game = RegularSetGame()
     @Namespace private var dealingNamespace
+    @Namespace private var clearingNamespace
     
     private func dealAnimation(for index: Int) -> Animation {
         var delay = 0.0
@@ -27,11 +28,11 @@ struct RegularSetGameView: View {
                 gameBody
                 Spacer()
                 bottomBody.padding(.horizontal)
-            }
+            }//.zIndex(1)
             HStack {
-                deckBody
+                deckBody//.zIndex(-1)
                 Spacer()
-                discardedDeckBody
+                discardedDeckBody//.zIndex(2)
             }
             .padding(.horizontal)
         }
@@ -46,7 +47,8 @@ struct RegularSetGameView: View {
                         withAnimation(.easeInOut) {
                             game.choose(card)
                         }
-                    }
+                    }.transition(.identity)
+                    .matchedGeometryEffect(id: card.id, in: clearingNamespace)
             })
         }
     }
@@ -69,7 +71,7 @@ struct RegularSetGameView: View {
                     .cardify(.black, contentOn: false)
                     .zIndex(zIndex(of: card))
                     .matchedGeometryEffect(id: card.id, in: dealingNamespace)
-                    .transition(AnyTransition.asymmetric(insertion: .opacity, removal: .identity))
+                    .transition(AnyTransition.asymmetric(insertion: .identity, removal: .identity))
             }
         }
         .frame(width: GameConstants.deckWidth, height: GameConstants.deckHeight)
@@ -86,10 +88,10 @@ struct RegularSetGameView: View {
         ZStack {
             ForEach(game.discardedCards) { card in
                 CardView(card: card)
-                    .aspectRatio(2/3, contentMode: .fit)
+                    .aspectRatio(GameConstants.aspectRatio, contentMode: .fill)
                     .cardify(.black, contentOn: true)
                     .zIndex(zIndex(of: card))
-                    .matchedGeometryEffect(id: card.id, in: dealingNamespace)
+                    .matchedGeometryEffect(id: card.id, in: clearingNamespace)
                     .transition(.identity)
             }
         }

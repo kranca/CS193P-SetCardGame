@@ -43,15 +43,12 @@ struct CardView: View {
                 case .rectangle:
                     switch card.content.shading {
                     case .solid:
-//                        RoundedRectangle(cornerRadius: 10, style: .continuous)
                         Square()
                             .fill()
                     case .striped:
-//                        RoundedRectangle(cornerRadius: 10, style: .continuous)
                         Square()
                             .opacity(DrawingConstants.opacity)
                     case .open:
-//                        RoundedRectangle(cornerRadius: 15, style: .circular)
                         Square()
                             .stroke(lineWidth: DrawingConstants.lineWidth)
                     }
