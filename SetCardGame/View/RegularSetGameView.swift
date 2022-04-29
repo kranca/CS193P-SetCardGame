@@ -28,11 +28,11 @@ struct RegularSetGameView: View {
                 gameBody
                 Spacer()
                 bottomBody.padding(.horizontal)
-            }//.zIndex(1)
+            }
             HStack {
-                deckBody//.zIndex(-1)
+                deckBody
                 Spacer()
-                discardedDeckBody//.zIndex(2)
+                discardedDeckBody
             }
             .padding(.horizontal)
         }
@@ -43,12 +43,16 @@ struct RegularSetGameView: View {
             AspectRatioVGrid(items: game.cardsOnBoard, aspectRatio: GameConstants.aspectRatio, content: { card in
                 cardView(for: card)
                     .matchedGeometryEffect(id: card.id, in: dealingNamespace)
+                    .rotationEffect(Angle(degrees: card.isMatched ?? false ? 360 : 0))
                     .onTapGesture {
-                        withAnimation(.easeInOut) {
+                        withAnimation(Animation.linear) {
                             game.choose(card)
                         }
-                    }.transition(.identity)
+                    }
                     .matchedGeometryEffect(id: card.id, in: clearingNamespace)
+                    .rotation3DEffect(
+                        Angle(degrees: card.isMatched ?? true ? 0 : -10),
+                        axis: (x: 1.0, y: 0.0, z: 0.0))
             })
         }
     }
@@ -71,7 +75,6 @@ struct RegularSetGameView: View {
                     .cardify(.black, contentOn: false)
                     .zIndex(zIndex(of: card))
                     .matchedGeometryEffect(id: card.id, in: dealingNamespace)
-                    .transition(AnyTransition.asymmetric(insertion: .identity, removal: .identity))
             }
         }
         .frame(width: GameConstants.deckWidth, height: GameConstants.deckHeight)
@@ -107,16 +110,16 @@ struct RegularSetGameView: View {
     func cardView(for card: Card) -> some View {
         Group {
             if let match = card.isMatched {
-               if match {
-                   CardView(card: card).cardify(.green)
-               } else {
-                   CardView(card: card).cardify(.red)
-               }
-           } else if card.isSelected {
-               CardView(card: card).cardify(.blue)
-           } else {
-               CardView(card: card).cardify(.black)
-           }
+                if match {
+                    CardView(card: card).cardify(.green)
+                } else {
+                    CardView(card: card).cardify(.red)
+                }
+            } else if card.isSelected {
+                CardView(card: card).cardify(.blue)
+            } else {
+                CardView(card: card).cardify(.black)
+            }
         }
         .padding(GameConstants.cardPadding)
     }
